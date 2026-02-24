@@ -1,0 +1,14 @@
+# 데이터베이스 파일 제외
+news_database.db
+
+# 크롤링된 대량의 텍스트 데이터 제외
+data/raw_texts/
+
+# 파이썬 실행 캐시 및 환경 설정 파일 제외
+__pycache__/
+*.pyc
+.env
+
+# (선택 사항) 로그 파일 제외
+*.log
+logs/
