@@ -67,4 +67,4 @@ chromedriver.exe
 geckodriver.exe
 
 # gemini
-.gemini
+.gemini/
