@@ -57,7 +57,7 @@ class DataMigrator:
                 'is_processed': 0,        # analyzer가 처리
                 'published_time': published_time,
                 'url': url,
-                'collected_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+               
             }
 
         except Exception as e:
