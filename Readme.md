@@ -1,18 +1,41 @@
-### 전체적인 프로젝트 방향
+# Regional News Crawler Project
 
-팀원 1 (PM),기획 및 거시 데이터 수집,"- 빅카인즈 API 연동 및 전국구 경제 키워드 데이터 수집- 프로젝트 일정 관리 및 발표 템플릿(2-1, 2-6) 총괄" - 박미정,민병주
-팀원 2 지역 특화 데이터 수집,"- 부산/충청 등 지역별 신문사 크롤러 구축 (requests, BS4, Selenium)- 재사용 가능한 크롤링 모듈(Class) 설계 (배점 2번 공략)" - 이채현,김보민
-팀원 3 데이터 전처리 및 NLP,- 형태소 분석(KoNLPy)을 통한 키워드 추출 및 감성 분석- 데이터 정제(불용어 제거) 파이프라인 구축 (배점 2번 공략)
+Python web crawler project for collecting economic news from regional newspapers (Seoul, Gyeonggi-do, Gangwon-do).
 
-팀원 4,상관관계 분석 및 통계,- 뉴스 감성 지수와 주가/코인 시계열 데이터 결합- 상관계수(r) 산출 및 Pandas 기반 통계 분석 (배점 3번 공략)
-팀원 5,지도 시각화 (Folium),- Folium을 활용한 인터랙티브 지도 UI 구현 및 마커 연동- 지역별 감성 지수에 따른 히트맵/컬러 맵핑 (배점 4번 공략)
-팀원 6,Streamlit 앱 통합 관리,"- 전체 레이아웃 구성 및 위젯(필터, 사이드바) 구현- 시각화 결과물(Matplotlib/Seaborn) 웹 대시보드 연동 (배점 4번 공략)"
+## Project Structure
+```
+src/
+├── crawlers/
+│   ├── base_crawler.py       # Base crawler class
+│   ├── regional/
+│   │   ├── seoul/
+│   │   │   └── seoul_shinmun.py
+│   │   ├── gyeonggi/
+│   │   │   └── gyeonggi_ilbo.py
+│   │   └── gangwon/
+│   │       └── gangwon_domin_ilbo.py
+│   ├── crawler_manager.py
+│   └── run_crawlers.py
+└── data/
+    └── regional_news.csv
+```
 
-### kobert-base-v1를 이용한 데이터 전처리
+## Installation
+```bash
+pip install -r requirements.txt
+```
 
-데이터 전처리 및 NLP
-형태소 분석(KoNLPy)을 통한 키워드 추출 및 감성 분석
-데이터 정제(불용어 제거) 파이프라인 구축
+## Usage
+```bash
+# Run all crawlers
+python src/crawlers/run_crawlers.py --mode all --articles 50
 
-pip install transformers
-pip install torch torchvision torchaudio
+# Run specific region
+python src/crawlers/run_crawlers.py --mode region --region 서울 --articles 30
+```
+
+## Development
+- Base crawler class with abstract methods
+- Regional newspaper crawlers extending base class
+- Error handling and logging
+- CSV output format
