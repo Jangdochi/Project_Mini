@@ -1,5 +1,11 @@
-requests
-beautifulsoup4
+jpype1>=1.6.0
+konlpy>=0.6.0
+tqdm>=4.67.3
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+pandas>=2.1.0
+chardet>=5.2.0
 selenium
-torch torchvision torchaudio
-pandas
+torch
+torchvision
+torchaudio

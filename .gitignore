@@ -1,26 +1,33 @@
-# 가상환경
+# Python-generated files & Cache
+__pycache__/
+*.py[ocd]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
 venv/
 .venv/
 
-# 파이썬 캐시
-__pycache__/
-*.py[cod]
-
-# 로그 파일
+# log
 logs/
 *.log
 
-# 데이터베이스 파일
+# Data & Database
 *.db
 *.sqlite3
 
-# 환경변수 파일
+# Environment variables & Secret
 .env
 
-# IDE
+# AI / Tool related
+.gemini/
+
+# IDE / Editor
 .vscode/
 .idea/
 
-# OS
+# OS generated files
 .DS_Store
 Thumbs.db
