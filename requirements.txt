@@ -1,0 +1,5 @@
+requests
+beautifulsoup4
+selenium
+torch torchvision torchaudio
+pandas
