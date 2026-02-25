@@ -76,21 +76,21 @@ def process_article(item, base_url, session, headers, limit_date):
         logger.debug(f"Error processing item: {e}")
         return None
 
-def scrape_gnen_economy(days=30):
-    """최근 n일(기본 30일) 데이터 수집"""
+def scrape_gnen_economy(days=7):
+    """최근 n일(기본 7일) 데이터 수집"""
     base_url = "https://www.gnen.net"
     news_data = []
     headers = get_common_headers()
     limit_date = (datetime.now() - timedelta(days=days)).strftime('%Y-%m-%d')
     
-    logger.info(f"경남경제 {days}일 수집 시작 (기준일: {limit_date})")
+    logger.info(f"경남경제 일주일 수집 시작 (기준일: {limit_date})")
 
     with requests.Session() as session:
         session.headers.update(headers)
         page = 1
         seen_urls = set()
 
-        while page <= 500:
+        while page <= 1000:
             target_url = f"{base_url}/news/articleList.html?page={page}&sc_section_code=S1N2&view_type=sm"
             
             try:
@@ -131,6 +131,6 @@ def scrape_gnen_economy(days=30):
     return news_data
 
 if __name__ == "__main__":
-    results = scrape_gnen_economy(days=30)
+    results = scrape_gnen_economy(days=365)
     if results:
-        save_to_csv(results, "data/scraped/raw_gyeongnam_gnen.csv", logger)
+        save_to_csv(results, "data/raw_gyeongnam_gnen.csv", logger)

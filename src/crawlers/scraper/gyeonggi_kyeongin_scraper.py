@@ -90,12 +90,12 @@ def process_article(article_url, session, headers, limit_date_str):
     except Exception:
         return None
 
-def scrape_kyeongin_money(days=30):
+def scrape_kyeongin_money(years=1):
     base_url = "https://www.kyeongin.com"
     news_data = []
     headers = get_common_headers()
     
-    limit_date_str = (datetime.now() - timedelta(days=days)).strftime('%Y-%m-%d')
+    limit_date_str = (datetime.now() - timedelta(days=365 * years)).strftime('%Y-%m-%d')
     logger.info(f"수집 기준일: {limit_date_str}")
 
     with requests.Session() as session:
@@ -103,7 +103,7 @@ def scrape_kyeongin_money(days=30):
         page = 1
         total_seen_urls = set()
 
-        while page <= 500:
+        while page <= 100:
             target_url = f"{base_url}/money" if page == 1 else f"{base_url}/money?page={page}"
             
             try:
@@ -173,5 +173,5 @@ def scrape_kyeongin_money(days=30):
     return news_data
 
 if __name__ == "__main__":
-    results = scrape_kyeongin_money(days=30)
-    save_to_csv(results, "data/scraped/raw_gyeonggi_kyeongin.csv", logger)
+    results = scrape_kyeongin_money(years=1)
+    save_to_csv(results, "data/raw_gyeonggi_kyeongin.csv", logger)

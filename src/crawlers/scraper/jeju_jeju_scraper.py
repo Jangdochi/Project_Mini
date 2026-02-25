@@ -29,21 +29,11 @@ def process_article(item, base_url, session, headers, limit_date):
         # 상세 정보 수집 (Sub Title, Content)
         details = fetch_article_details(article_url, {
             'sub_title': ['div.user-snb h2', 'div.article-head-title'],
-            'content': ['article#article-view-content-div', '#articleBody', 'div#article-view-content-div']
+            'content': ['article#article-view-content-div', '#articleBody']
         }, headers, logger, session=session)
 
-        # [수정] 요약(Description) 추출 로직 개선
-        # 1. 목록 페이지의 요약 태그 시도
-        summary_tag = item.select_one('div.list-summary')
-        if summary_tag:
-            description = summary_tag.get_text(strip=True)
-        else:
-            # 2. 목록에 없으면 수집된 본문의 앞부분 사용
-            content = details.get('content', '')
-            if content:
-                description = (content[:150] + "...") if len(content) > 150 else content
-            else:
-                description = ""
+        # 요약 및 이미지
+        description = details.get('content', '')[:150] + "..."
 
         return {
             'date': formatted_date,
@@ -60,7 +50,7 @@ def process_article(item, base_url, session, headers, limit_date):
         logger.debug(f"Error processing item: {e}")
         return None
 
-def scrape_jeju_economy(days=30):
+def scrape_jeju_economy(days=365):
     base_url = "http://www.jejunews.com"
     news_data = []
     headers = get_common_headers()
@@ -76,8 +66,7 @@ def scrape_jeju_economy(days=30):
                 response = fetch_url(target_url, headers, logger, session=session)
                 if not response or response.status_code != 200: break
                 
-                # 인코딩 깨짐 방지를 위해 response.content 사용
-                soup = BeautifulSoup(response.content, 'html.parser')
+                soup = BeautifulSoup(response.text, 'html.parser')
                 items = soup.select('div.list-block')
                 if not items: break
                 
@@ -108,5 +97,5 @@ def scrape_jeju_economy(days=30):
     return news_data
 
 if __name__ == "__main__":
-    results = scrape_jeju_economy(days=30)
-    save_to_csv(results, "data/scraped/raw_jeju_jeju.csv", logger)
+    results = scrape_jeju_economy(days=365)
+    save_to_csv(results, "data/raw_jeju_jeju.csv", logger)

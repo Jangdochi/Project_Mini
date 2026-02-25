@@ -77,7 +77,7 @@ def scrape_hankyung_category(category_url, limit_date, session, headers):
     page = 1
     total_seen_urls = set()
 
-    while page <= 500: # 카테고리당 최대 페이지 제한
+    while page <= 100: # 카테고리당 최대 페이지 제한
         target_url = f"{category_url}?page={page}"
         try:
             response = fetch_url(target_url, headers, logger, session=session)
@@ -128,7 +128,7 @@ def main():
     
     all_news_data = []
     headers = get_common_headers()
-    limit_date = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
+    limit_date = (datetime.now() - timedelta(days=365)).strftime('%Y-%m-%d')
     
     with requests.Session() as session:
         session.headers.update(headers)
@@ -141,7 +141,7 @@ def main():
 
     if all_news_data:
         # PRD 통합 데이터 스키마 규칙에 따라 CSV 저장
-        save_to_csv(all_news_data, "data/scraped/raw_national_hankyung.csv", logger)
+        save_to_csv(all_news_data, "data/raw_national_hankyung.csv", logger)
         logger.info(f"전체 수집 완료: 총 {len(all_news_data)}건 저장됨.")
     else:
         logger.warning("수집된 데이터가 없습니다.")

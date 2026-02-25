@@ -79,7 +79,7 @@ def process_article(item, session, headers, limit_date):
         logger.debug(f"Error processing item: {e}")
         return None
 
-def scrape_kwnews_economy(days=30):
+def scrape_kwnews_economy(days=365):
     base_url = "https://www.kwnews.co.kr"
     news_data = []
     headers = get_common_headers()
@@ -126,5 +126,5 @@ def scrape_kwnews_economy(days=30):
     return news_data
 
 if __name__ == "__main__":
-    results = scrape_kwnews_economy(days=30)
-    save_to_csv(results, "data/scraped/raw_gangwon_kwnews.csv", logger)
+    results = scrape_kwnews_economy(days=365)
+    save_to_csv(results, "data/raw_gangwon_kwnews.csv", logger)

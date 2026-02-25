@@ -1,12 +1,15 @@
 import sqlite3
 import logging
 import time
-import analyzer.log_config as log_config
-from analyzer.sentiment import NewsSentimentAnalyzer
+import os
+import log_config
+from sentiment import NewsSentimentAnalyzer
 
 logger = logging.getLogger(__name__)
 
-DB_PATH = "data/news.db"
+# 프로젝트 루트 기준으로 경로 설정
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DB_PATH = os.path.join(BASE_DIR, "data", "news.db")
 
 
 def run_analysis():

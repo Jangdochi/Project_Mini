@@ -68,11 +68,11 @@ def process_article(item, session, headers, limit_date):
         logger.debug(f"Error processing item: {e}")
         return None
 
-def scrape_busan_economy(days=30):
-    """최근 지정된 일수(기본 30일) 데이터 수집"""
+def scrape_busan_economy(years=1):
+    """최근 1년(365일) 데이터 수집"""
     news_data = []
-    # 기준 날짜 계산
-    limit_date = (datetime.now() - timedelta(days=days)).strftime('%Y-%m-%d')
+    # 1년 전 날짜 계산
+    limit_date = (datetime.now() - timedelta(days=365 * years)).strftime('%Y-%m-%d')
     headers = get_common_headers()
     
     # POST 요청을 위한 폼 데이터 (분석된 경제해양 섹션 전용 페이로드)
@@ -85,14 +85,14 @@ def scrape_busan_economy(days=30):
         "html_idx": "259"
     }
 
-    logger.info(f"Busan {days}일 수집 시작 (기준일: {limit_date})")
+    logger.info(f"Busan 365일 수집 시작 (기준일: {limit_date})")
 
     with requests.Session() as session:
         session.headers.update(headers)
         page = 1
         seen_urls = set()
 
-        while page <= 500: 
+        while page <= 1000: # 1년치를 위해 최대 페이지 상한 확대
             paging_url = "https://www.busan.com/commonFunc/frontPaging.php"
             payload = base_payload.copy()
             payload["page"] = str(page)
@@ -147,11 +147,11 @@ def scrape_busan_economy(days=30):
     return news_data
 
 if __name__ == "__main__":
-    # 30일치 수집 실행
-    final_results = scrape_busan_economy(days=30)
+    # 1년치 수집 실행
+    final_results = scrape_busan_economy(years=1)
     if final_results:
         # PRD 표준 파일명 적용
-        save_to_csv(final_results, "data/scraped/raw_gyeongnam_busan.csv", logger)
+        save_to_csv(final_results, "data/raw_gyeongnam_busan.csv", logger)
         logger.info(f"최종 {len(final_results)}건의 부산/경남 경제 뉴스를 저장했습니다.")
     else:
         logger.error("수집된 데이터가 없습니다.")

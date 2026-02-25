@@ -28,7 +28,7 @@ logging.basicConfig(
 logger = logging.getLogger("CsvDataToDB")
 
 class DataToDBProcessor:
-    def __init__(self, db_path="data/news_scraped.db", max_workers=4):
+    def __init__(self, db_path="data/news.db", max_workers=4):
         self.db_path = db_path
         self.max_workers = max_workers
         self.region_map = {
@@ -101,9 +101,9 @@ class DataToDBProcessor:
         if start_date is None:
             start_date = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
 
-        csv_files = glob.glob("data/scraped/raw_*.csv")
+        csv_files = glob.glob("data/filtered/filtered_raw_*.csv")
         if not csv_files:
-            logger.warning("처리할 raw_*.csv 파일이 없습니다.")
+            logger.warning("처리할 filtered_raw_*.csv 파일이 없습니다.")
             return
 
         conn = sqlite3.connect(self.db_path)

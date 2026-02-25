@@ -11,9 +11,9 @@ BASE_URL = "http://www.kwangju.co.kr"
 SECTION_URL = BASE_URL + "/section.php?sid=5&page={}"
 
 REGION = "jeonnam"
-PRESS = "kwangju"
+PRESS = "광주일보"
 
-DATA_DIR = Path("data/scraped")
+DATA_DIR = Path("data")
 LOG_DIR = Path("logs")
 DATA_DIR.mkdir(exist_ok=True)
 LOG_DIR.mkdir(exist_ok=True)
@@ -22,7 +22,7 @@ TODAY_STR = datetime.now().strftime("%Y%m%d_%H%M%S")
 LOG_FILE = LOG_DIR / f"{PRESS}_{TODAY_STR}.log"
 
 MAX_PAGES = 500
-DAYS_LIMIT = 30
+DAYS_LIMIT = 365
 
 
 def log(msg):

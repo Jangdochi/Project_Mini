@@ -1,8 +1,3 @@
-import warnings
-import urllib3
-warnings.filterwarnings("ignore", category=UserWarning, module='requests')
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
 import requests
 from bs4 import BeautifulSoup
 import time
@@ -77,29 +72,28 @@ def process_article(item, base_url, session, headers, limit_date):
         logger.debug(f"Error processing item: {e}")
         return None
 
-def scrape_seoul_economy(days=30):
-    """최근 지정된 일수(기본 30일)만큼 데이터 수집"""
+def scrape_seoul_economy(months=6):
+    """최근 6개월(180일) 데이터 수집"""
     base_url = "https://www.seoul.co.kr"
     news_data = []
     headers = get_common_headers()
     
-    # 수집 기준일 계산
-    limit_date = (datetime.now() - timedelta(days=days)).strftime('%Y-%m-%d')
-    logger.info(f"Starting Seoul collection until {limit_date} (Last {days} days)...")
+    # 6개월 기준 날짜 계산 (180일)
+    limit_date = (datetime.now() - timedelta(days=30 * months)).strftime('%Y-%m-%d')
+    logger.info(f"Starting Seoul collection until {limit_date} (Last {months} months)...")
 
     with requests.Session() as session:
         session.headers.update(headers)
         page = 1
         seen_urls = set()
         
-        while page <= 500: # 테스트를 위해 페이지 제한 상향 조정
+        while page <= 500: # 서울신문 페이지네이션 한계 고려
             target_url = f"{base_url}/newsList/economy?page={page}"
             try:
                 response = fetch_url(target_url, headers, logger, session=session)
                 if not response or response.status_code != 200: break
                 
-                # charset="utf-8" 강제 지정하여 한글 깨짐 방지
-                soup = BeautifulSoup(response.content, 'html.parser', from_encoding='utf-8')
+                soup = BeautifulSoup(response.text, 'html.parser')
                 items = soup.select('li.newsBox_row1')
                 
                 if not items: 
@@ -140,8 +134,8 @@ def scrape_seoul_economy(days=30):
     return news_data
 
 if __name__ == "__main__":
-    # 30일(1개월) 수집 실행
-    results = scrape_seoul_economy(days=30)
+    # 6개월 수집 실행
+    results = scrape_seoul_economy(months=6)
     if results:
-        save_to_csv(results, "data/scraped/raw_seoul_seoul.csv", logger)
+        save_to_csv(results, "data/raw_seoul_seoul.csv", logger)
         logger.info(f"Successfully saved {len(results)} articles for Seoul Shinmun.")

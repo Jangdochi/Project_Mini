@@ -7,7 +7,7 @@ from datetime import timedelta
 
 # [1] 데이터베이스 연결 및 데이터 추출
 # 프로젝트 폴더 내에 있는 db 파일 이름을 입력하세요 (예: news_data.db)
-db_path = 'your_database_name.db' 
+db_path = 'news_data.db' 
 
 try:
     conn = sqlite3.connect(db_path)

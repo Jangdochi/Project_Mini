@@ -47,18 +47,18 @@ def process_article(item, base_url, session, headers, limit_date):
     except:
         return None
 
-def scrape_incheon_ilbo(days=30):
+def scrape_incheon_ilbo(years=1):
     base_url = "https://www.incheonilbo.com"
     target_url_base = f"{base_url}/news/articleList.html?sc_section_code=S1N4&view_type=sm"
     news_data = []
     headers = get_common_headers()
-    limit_date = (datetime.now() - timedelta(days=days)).strftime('%Y-%m-%d')
+    limit_date = (datetime.now() - timedelta(days=365 * years)).strftime('%Y-%m-%d')
     logger.info(f"Starting Incheon parallel collection until {limit_date}...")
 
     with requests.Session() as session:
         session.headers.update(headers)
         page = 1
-        while page <= 500:
+        while page <= 1000:
             target_url = f"{target_url_base}&page={page}"
             try:
                 # 목록 페이지 요청 시 fetch_url 사용
@@ -97,5 +97,5 @@ def scrape_incheon_ilbo(days=30):
     return news_data
 
 if __name__ == "__main__":
-    results = scrape_incheon_ilbo(days=30)
-    save_to_csv(results, "data/scraped/raw_incheon_incheon.csv", logger)
+    results = scrape_incheon_ilbo(years=1)
+    save_to_csv(results, "data/raw_incheon_incheon.csv", logger)
