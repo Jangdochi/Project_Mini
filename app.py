@@ -381,8 +381,32 @@ with tab1:
     btm_col1, btm_col2 = st.columns(2)
     with btm_col1:
         st.write("### 🔍 감성-자산 상관계수 히트맵")
-        labels = ['감성', 'KOSPI', 'KOSDAQ']
-        st.plotly_chart(px.imshow(np.random.uniform(0.6, 0.9, (3, 3)), text_auto=True, x=labels, y=labels, color_continuous_scale='RdBu_r'), width="stretch")
+        if not chart_df.empty and fdr is not None:
+            try:
+                # 1. KOSPI, KOSDAQ 데이터 각각 가져오기
+                k = fdr.DataReader('KS11', start_date, end_date)['Close'].reset_index()
+                q = fdr.DataReader('KQ11', start_date, end_date)['Close'].reset_index()
+                k.columns = ['date', 'KOSPI']
+                q.columns = ['date', 'KOSDAQ']
+                k['date'] = k['date'].dt.date.astype(str)
+                q['date'] = q['date'].dt.date.astype(str)
+                
+                # 2. 감성 데이터(chart_df)와 주식 데이터 병합하기
+                corr_df = pd.merge(chart_df[['date', 'sentiment_index']], k, on='date', how='inner')
+                corr_df = pd.merge(corr_df, q, on='date', how='inner')
+                
+                # 3. 실제 상관계수 계산 (대각선은 무조건 1.0이 나옵니다!)
+                corr_matrix = corr_df[['sentiment_index', 'KOSPI', 'KOSDAQ']].corr()
+                corr_matrix.columns = ['감성', 'KOSPI', 'KOSDAQ']
+                corr_matrix.index = ['감성', 'KOSPI', 'KOSDAQ']
+                
+                # 4. 차트 그리기
+                fig_heat = px.imshow(corr_matrix, text_auto=".2f", color_continuous_scale='RdBu_r', aspect="auto")
+                st.plotly_chart(fig_heat, width="stretch")
+            except Exception as e:
+                st.warning("상관관계를 계산하기 위한 주가 데이터가 충분하지 않습니다.")
+        else:
+            st.info("상관관계 분석을 위한 데이터가 없습니다.")
     with btm_col2:
         st.write("### 📉 감성 vs 자산 수익률 산점도")
         if not chart_df.empty:
