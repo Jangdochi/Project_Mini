@@ -196,36 +196,30 @@ class NewsMapGeneratorGeo:
     
     def add_geojson_layer(self, max_news: int = 10):
         if not self.geojson_data: return
-        
         region_stats = self.get_region_statistics()
         EXCLUDED_REGIONS = ['Jeju', 'Dokdo', 'Ulleung-gun']
-        
+        self._popup_html_list = []  # popup_html을 순서대로 저장
         for feature in self.geojson_data['features']:
             geojson_region = feature['properties'].get('NAME_1')
             if geojson_region in EXCLUDED_REGIONS: continue
-            
             db_region = get_db_region(geojson_region)
             stat = region_stats.get(db_region, {'count': 0, 'neg_ratio': 0, 'positive_count': 0, 'negative_count': 0})
-            
-            # 색상 결정 (부정 비율 기준)
             if stat['count'] == 0:
                 fill_color = '#CCCCCC'
             else:
-                fill_color = get_region_color_by_avg(stat['neg_ratio']) # 비율 인자 전달
-            
+                fill_color = get_region_color_by_avg(stat['neg_ratio'])
             feature_collection = {'type': 'FeatureCollection', 'features': [feature]}
-            
             style_fn = lambda x, c=fill_color: {'fillColor': c, 'fillOpacity': 0.6, 'color': '#333', 'weight': 1.5}
             highlight_fn = lambda x: {'fillOpacity': 0.8, 'weight': 3, 'color': '#FF5722'}
-            
             popup_html = self.create_popup_html(db_region, stat, max_news) if db_region and stat['count'] > 0 else f"<div style='padding:10px;'><b>{geojson_region}</b><br/>데이터 없음</div>"
             popup = folium.Popup(IFrame(html=popup_html, width=730, height=500), max_width=750)
-            
+            self._popup_html_list.append(popup_html)  # 순서대로 저장
             GeoJson(
                 feature_collection,
                 style_function=style_fn,
                 highlight_function=highlight_fn,
-                popup=popup
+                popup=popup,
+                tooltip=None
             ).add_to(self.map)
     
     def add_legend(self):
@@ -243,12 +237,62 @@ class NewsMapGeneratorGeo:
         '''
         self.map.get_root().html.add_child(folium.Element(legend_html))
     
+    def add_info_panel_js(self):
+        # info-panel div 추가 및 마우스오버/클릭 이벤트 JS 삽입 (popup_html을 data-infopanel로 할당)
+        info_panel_js = f'''
+        <script>
+        if (!document.getElementById('info-panel')) {{
+            var infoPanel = document.createElement('div');
+            infoPanel.id = 'info-panel';
+            infoPanel.style.position = 'fixed';
+            infoPanel.style.top = '60px';
+            infoPanel.style.right = '30px';
+            infoPanel.style.width = '350px';
+            infoPanel.style.maxHeight = '80vh';
+            infoPanel.style.overflowY = 'auto';
+            infoPanel.style.background = 'white';
+            infoPanel.style.border = '2px solid #333';
+            infoPanel.style.borderRadius = '8px';
+            infoPanel.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+            infoPanel.style.padding = '18px 18px 10px 18px';
+            infoPanel.style.display = 'none';
+            infoPanel.style.zIndex = 9999;
+            document.body.appendChild(infoPanel);
+        }}
+        setTimeout(function() {{
+            var geojsons = document.querySelectorAll('.leaflet-interactive');
+            var htmls = {self._popup_html_list};
+            geojsons.forEach(function(layer, idx) {{
+                if (htmls[idx]) layer.setAttribute('data-infopanel', htmls[idx]);
+                layer.addEventListener('mouseover', function(e) {{
+                    var html = layer.getAttribute('data-infopanel');
+                    if (html) {{
+                        var infoPanel = document.getElementById('info-panel');
+                        infoPanel.innerHTML = html;
+                        infoPanel.style.display = 'block';
+                    }}
+                }});
+                layer.addEventListener('mouseout', function(e) {{
+                    var infoPanel = document.getElementById('info-panel');
+                    infoPanel.style.display = 'none';
+                }});
+                layer.addEventListener('click', function(e) {{
+                    var infoPanel = document.getElementById('info-panel');
+                    infoPanel.style.display = 'none';
+                }});
+            }});
+        }}, 1000);
+        </script>
+        '''
+        self.map.get_root().html.add_child(folium.Element(info_panel_js))
+    
     def generate(self, output_file: str = 'news_map_geo.html', max_news: int = 10):
         self.load_geojson()
         self.create_map()
         self.add_geojson_layer(max_news=max_news)
         self.add_region_labels()
         self.add_legend()
+        self.add_info_panel_js()
         self.map.save(output_file)
         self.add_side_panel_with_events(output_file)
 
@@ -290,11 +334,6 @@ class NewsMapGeneratorGeo:
             .news-title {{ font-weight: bold; color: #333; font-size: 13px; line-height: 1.4; }}
             .news-keywords {{ font-size: 11px; color: #1976D2; margin-top: 4px; }}
         </style>
-        
-        <div id="info-panel">
-            <h3>📍 강원도 주요 뉴스 & 키워드</h3>
-            <p style="color: #999; font-size: 12px;">지역을 선택하면 상세 키워드가 표시됩니다.</p>
-        </div>
         
         <script>
             var regionNewsData = {region_data_json};
