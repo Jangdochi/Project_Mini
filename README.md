@@ -113,8 +113,12 @@
 <img width="2560" height="1340" alt="자산 분석 3" src="https://github.com/user-attachments/assets/55a6b7d8-077c-4923-bbea-56191156a73a" />
 
 &nbsp;
-### 4️⃣ 지역별 감성 타임라인 (Sentiment Timeline)
-(설명 추가 예정)
+### 4️⃣ 지역별 감성 타임라인 캘린더 (Sentiment Timeline Calendar)
+- **일별 감성 지수 트래킹**: 캘린더 UI를 활용하여 날짜별 지역 경제 감성 지수의 변화를 시계열적으로 추적합니다.
+- **감성 강도 색상 매핑**: 해당 날짜의 평균 감성 점수에 따라 색상 농도를 차별화(긍정-청색, 부정-적색)하여 여론의 변곡점을 직관적으로 식별합니다.
+- **주요 이벤트 연동 분석**: 특정 시점의 감성 지수 급등락을 확인하여 주요 경제 정책 발표나 지역별 매크로 이슈와의 상관관계를 분석할 수 있는 기초 데이터를 제공합니다.
+<img width="1274" height="650" alt="감성 타임라인 캘린더" src="https://github.com/user-attachments/assets/cfb2c00f-f150-4cb0-a190-2c686f25f2e8" />
+
 
 &nbsp;
 ### 5️⃣ 기술적 지표 및 변동성 분석 (Technical Analysis)
