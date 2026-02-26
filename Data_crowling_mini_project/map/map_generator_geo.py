@@ -293,7 +293,7 @@ class NewsMapGeneratorGeo:
             return
         
         region_stats = self.get_region_statistics()
-        EXCLUDED_REGIONS = ['Jeju']
+        EXCLUDED_REGIONS = ['Jeju', 'Dokdo', 'Ulleung-gun']  # 독도, 울릉군 등 동쪽 섬 제외
         
         for feature in self.geojson_data['features']:
             geojson_region = feature['properties'].get('NAME_1')
@@ -339,7 +339,7 @@ class NewsMapGeneratorGeo:
                     background-color: white; border: 2px solid grey; border-radius: 5px;
                     z-index: 9999; font-size: 14px; padding: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.3);">
             <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 16px;">📊 감성 지수</p>
-            <p style="margin: 5px 0;"><span style="background-color: #0D47A1; width: 20px; height: 15px; display: inline-block; margin-right: 5px;"></span>매우 긍정적 (> 0.5)</p>
+            <p style="margin: 5px 0;"><span style="background-color: #0D47A1; width: 20px; height: 15px; display: inline-block; margin-right: 5px;"></span>매우 긍정적 (> 0.8)</p>
             <p style="margin: 5px 0;"><span style="background-color: #81C784; width: 20px; height: 15px; display: inline-block; margin-right: 5px;"></span>긍정적 (> 0)</p>
             <p style="margin: 5px 0;"><span style="background-color: #FFFFFF; border: 1px solid #ccc; width: 20px; height: 15px; display: inline-block; margin-right: 5px;"></span>중립 (= 0)</p>
             <p style="margin: 5px 0;"><span style="background-color: #FF5252; width: 20px; height: 15px; display: inline-block; margin-right: 5px;"></span>부정적 (< 0)</p>
