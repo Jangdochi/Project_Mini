@@ -101,8 +101,9 @@
 - **GIS 기반 감성 맵**: Folium 지도상에 지역별 뉴스 밀도와 긍/부정 지수를 컬러 맵으로 시각화하여 지역별 경제 온도를 직관적으로 표시합니다.
 - **지역별 핵심 이슈(키워드) 분석**: **TF-IDF 및 형태소 분석**을 기반으로 지역별 핵심 경제 키워드를 도출합니다. '가덕도 신공항', '반도체 클러스터' 등 각 지역의 특수성이 반영된 핵심 이슈를 빈도 분석과 가중치 계산을 통해 추출합니다.
 - **워드클라우드 및 데이터 드릴다운**: 특정 지역 클릭 시 해당 권역의 핵심 키워드를 **워드클라우드(WordCloud)** 형식으로 시각화하여 제공하며, 주요 경제 뉴스 헤드라인과 함께 입체적인 여론 분석이 가능하도록 구현했습니다.
-<img width="2560" height="1321" alt="지도 시각화 1" src="https://github.com/user-attachments/assets/c59414cc-691b-4c63-b9d8-692b903dae5a" />
-<img width="2560" height="1311" alt="지도 시각화 2" src="https://github.com/user-attachments/assets/c357f476-38a5-49cf-8082-b8e54637dc18" />
+<img width="2560" height="1321" alt="지도 시각화 1" src="https://github.com/user-attachments/assets/e6ec4c71-b5ec-4e53-a60d-54536225336f" />
+<img width="2560" height="1311" alt="지도 시각화 2 src="https://github.com/user-attachments/assets/f5b4b677-7f7c-45f7-8bd8-c4931ebb9704" />
+
 
 &nbsp;
 ### 3️⃣ 자산 상관관계 분석 (Market Correlation Analysis)
@@ -117,7 +118,7 @@
 - **일별 감성 지수 트래킹**: 캘린더 UI를 활용하여 날짜별 지역 경제 감성 지수의 변화를 시계열적으로 추적합니다.
 - **감성 강도 색상 매핑**: 해당 날짜의 평균 감성 점수에 따라 색상 농도를 차별화(긍정-청색, 부정-적색)하여 여론의 변곡점을 직관적으로 식별합니다.
 - **주요 이벤트 연동 분석**: 특정 시점의 감성 지수 급등락을 확인하여 주요 경제 정책 발표나 지역별 매크로 이슈와의 상관관계를 분석할 수 있는 기초 데이터를 제공합니다.
-<img width="1274" height="650" alt="감성 타임라인 캘린더" src="https://github.com/user-attachments/assets/cfb2c00f-f150-4cb0-a190-2c686f25f2e8" />
+<img width="1279" height="661" alt="감성 타임라인 캘린더" src="https://github.com/user-attachments/assets/c9c371eb-d407-4a99-8b40-7fdd2e19f5db" />
 
 
 &nbsp;
