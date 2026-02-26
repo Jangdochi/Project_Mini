@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -30,7 +31,7 @@ def load_official_map():
     
     # 원본 모듈을 그대로 실행하여 파일 업데이트 (통합 DB는 db_loader.py에서 처리됨)
     generator = NewsMapGeneratorGeo()
-    generator.generate(official_path, max_news=10)
+    generator.generate(official_path)
     
     if os.path.exists(official_path):
         with open(official_path, 'r', encoding='utf-8') as f:

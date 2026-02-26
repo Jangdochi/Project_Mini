@@ -84,16 +84,19 @@ class NewsMapGeneratorGeo:
     def get_latest_news_integrated(self, db_region: str, limit: int = 5):
         """[rowid 에러 해결] 통합 DB에서 최신 뉴스 리스트 추출"""
         conn = self._get_integrated_conn()
+        cursor = conn.cursor()
+        cursor.execute("PRAGMA database_list")
+        databases = [row[1] for row in cursor.fetchall()]
+        
         sub_regions = self.REGION_CONSOLIDATION.get(db_region, [db_region])
         placeholders = ', '.join(['?'] * len(sub_regions))
         
-        query = f"""
-        SELECT title, sentiment_score, url, keyword FROM (
-            SELECT title, sentiment_score, url, keyword, region FROM main.news
-            UNION ALL
-            SELECT title, sentiment_score, url, keyword, region FROM scraped.news
-        ) WHERE region IN ({placeholders}) LIMIT ?
-        """
+        subquery = "SELECT title, sentiment_score, url, keyword, region FROM main.news"
+        if 'scraped' in databases:
+            subquery += " UNION ALL SELECT title, sentiment_score, url, keyword, region FROM scraped.news"
+            
+        query = f"SELECT title, sentiment_score, url, keyword FROM ({subquery}) WHERE region IN ({placeholders}) LIMIT ?"
+        
         df = pd.read_sql_query(query, conn, params=(*sub_regions, limit))
         conn.close()
         return df.to_dict('records')
