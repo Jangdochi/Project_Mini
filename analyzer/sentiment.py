@@ -63,9 +63,9 @@ class NewsSentimentAnalyzer:
 
             scaled_score = (final_score - 0.5) * 2
 
-            if scaled_score > 0.2:
+            if scaled_score > 0.9:
                 label = "긍정"
-            elif scaled_score < -0.2:
+            elif scaled_score < 0.5:
                 label = "부정"
             else:
                 label = "중립"
